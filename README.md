@@ -20,8 +20,8 @@ Due to the chaotic nature of online writing habits, several data cleaning steps 
 6. Lemmatization of words.
 
 ## Exploratory Data Analysis
-- **Word Cloud and Frequency Analysis**: High-frequency words like "hate" and "damn" appeared across all messages, indicating their usage might be contextual rather than inherently negative.
-- **Label Proportions**: The dataset showed some imbalance with a 3:2 ratio between non-hostile (label 0) and hostile (label 1) messages.
+### Word Cloud and Frequency Analysis: High-frequency words like "hate" and "damn" appeared across all messages, indicating their usage might be contextual rather than inherently negative.
+### Label Proportions: The dataset showed some imbalance with a 3:2 ratio between non-hostile (label 0) and hostile (label 1) messages.
 
 ### Label-Specific Observations
 - **Label 0 (Non-hostile)**: High-frequency words were similar to the overall corpus, but lower-frequency words tended to be positive or neutral.
