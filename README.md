@@ -6,7 +6,7 @@ This project aims to detect cyberbullying in social media comments using machine
 Cyberbullying is a significant issue in digital communication, involving the dissemination of harmful or mean content about others via various digital means. This project focuses on identifying such hostile comments on social media platforms to limit the harm caused by cyberbullies. A dataset of 20,001 Twitter messages, each labeled for online hostility, was used to train and evaluate the classification model.
 
 ## Data
-The Tweets Dataset(https://www.kaggle.com/datasets/dataturks/dataset-for-detection-of-cybertrolls) includes the following variables:
+The [Tweets Dataset](https://www.kaggle.com/datasets/dataturks/dataset-for-detection-of-cybertrolls) includes the following variables:
 - **Content**: The text content of the message.
 - **Label**: Indicates whether the message is online hostile (1) or not (0).
 
