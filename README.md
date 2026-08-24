@@ -15,6 +15,10 @@ environment variables: `MODEL_DIR` (where `lda.model` is written and read, defau
 `.`) and `WORDCLOUD_MASK_URL` (the word-cloud mask image; the plot renders unmasked
 if it cannot be fetched).
 
+Written against gensim 3.x. The only hard incompatibility with gensim 4+ — an unused
+`gensim.models.wrappers` import, a module removed in 4.0 — has been dropped. The script
+has not been executed since, so treat other version sensitivities as untested.
+
 The metrics quoted below come from a run that is not captured in this repository —
 `Semantic-Classification.py` is a script rather than a notebook, so no outputs are
 stored alongside the code. Re-running it will reproduce them.

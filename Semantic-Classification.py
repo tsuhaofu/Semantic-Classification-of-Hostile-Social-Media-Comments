@@ -31,7 +31,7 @@ from sklearn.model_selection import GridSearchCV
 import gensim
 import gensim.corpora as corpora
 from gensim.utils import simple_preprocess
-from gensim.models import CoherenceModel,wrappers
+from gensim.models import CoherenceModel
 
 # Plotting tools
 import pyLDAvis
