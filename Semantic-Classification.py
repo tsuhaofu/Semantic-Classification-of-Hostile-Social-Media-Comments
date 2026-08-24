@@ -72,8 +72,10 @@ def plot_10_most_common_words(count_data, count_vectorizer):
     plt.ylabel('counts')  
     plt.show()  
 
+MODEL_DIR = os.environ.get("MODEL_DIR", ".")
+
 #Import Data
-json_df = pd.read_json (r'C:\Users\kevin\Desktop\統計計算\Dataset for Detection of Cyber-Trolls.json', lines=True,orient='columns')
+json_df = pd.read_json('Dataset for Detection of Cyber-Trolls.json', lines=True,orient='columns')
 json_df.shape
 json_df.head()
 x = []
@@ -202,7 +204,7 @@ lda_model = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                            passes=10,
                                            alpha='auto',
                                            per_word_topics=True)
-lda_model.save(r'C:\Users\kevin\Desktop\統計計算\lda.model')
+lda_model.save(os.path.join(MODEL_DIR, "lda.model"))
  # Compute Perplexity
 print('\nPerplexity: ', lda_model.log_perplexity(corpus))  # a measure of how good the model is. lower the better.
  # Compute Coherence Score
@@ -210,7 +212,7 @@ coherence_model_lda = CoherenceModel(model=lda_model, texts=texts, dictionary=id
 coherence_lda = coherence_model_lda.get_coherence()
 print('\nCoherence Score: ', coherence_lda)
  #Load lad model
-model =  gensim.models.LdaModel.load(r'C:\Users\kevin\Desktop\統計計算\lda.model')
+model =  gensim.models.LdaModel.load(os.path.join(MODEL_DIR, "lda.model"))
  #Topic Vector
 topic_vectors = []
 for i in range(len(df['content'])):
