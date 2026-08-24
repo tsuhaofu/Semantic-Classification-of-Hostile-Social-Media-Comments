@@ -5,6 +5,28 @@ This project aims to detect cyberbullying in social media comments using machine
 ## Introduction
 Cyberbullying is a significant issue in digital communication, involving the dissemination of harmful or mean content about others via various digital means. This project focuses on identifying such hostile comments on social media platforms to limit the harm caused by cyberbullies. A dataset of 20,001 Twitter messages, each labeled for online hostility, was used to train and evaluate the classification model.
 
+## Running it
+```bash
+pip install pandas numpy matplotlib seaborn pillow requests wordcloud nltk gensim scikit-learn pyLDAvis
+python Semantic-Classification.py
+```
+The dataset JSON is in this repository, so no download is needed. Two optional
+environment variables: `MODEL_DIR` (where `lda.model` is written and read, default
+`.`) and `WORDCLOUD_MASK_URL` (the word-cloud mask image; the plot renders unmasked
+if it cannot be fetched).
+
+The metrics quoted below come from a run that is not captured in this repository —
+`Semantic-Classification.py` is a script rather than a notebook, so no outputs are
+stored alongside the code. Re-running it will reproduce them.
+
+## Credits
+The data loading, cleaning and lemmatisation pipeline is my own, written against this
+dataset's schema. The modelling sections follow well-known public walkthroughs closely:
+
+- LDA topic modelling — [Topic Modeling with Gensim](https://www.machinelearningplus.com/nlp/topic-modeling-gensim-python/), Machine Learning Plus
+- SVM classification — [Support Vector Machines with Scikit-learn](https://www.datacamp.com/tutorial/svm-classification-scikit-learn-python), DataCamp
+- Word cloud generation — the standard `wordcloud` masked-image walkthrough
+
 ## Data
 The [Tweets dataset](https://www.kaggle.com/datasets/dataturks/dataset-for-detection-of-cybertrolls) includes the following variables:
 - **Content**: The text content of the message.
