@@ -133,10 +133,19 @@ sns.countplot(x = "label", data = df)
 plt.show()
 
 #WordCloud
-Mask = np.array(Image.open(requests.get('http://clipart-library.com/image_gallery2/Twitter-PNG-Image.png', stream=True).raw))
+# The mask was fetched at runtime in the original run. That URL is not guaranteed
+# to persist, so it is overridable and the word cloud falls back to unmasked.
+MASK_URL = os.environ.get(
+    "WORDCLOUD_MASK_URL",
+    "http://clipart-library.com/image_gallery2/Twitter-PNG-Image.png")
+try:
+    Mask = np.array(Image.open(requests.get(MASK_URL, stream=True, timeout=10).raw))
+except Exception as exc:
+    print(f"Word-cloud mask unavailable ({exc}); rendering without a mask.")
+    Mask = None
 # We use the ImageColorGenerator library from Wordcloud 
 # Here we take the color of the image and impose it over our wordcloud
-image_colors = ImageColorGenerator(Mask)
+image_colors = ImageColorGenerator(Mask) if Mask is not None else None
 # Now we use the WordCloud function from the wordcloud library 
 all_words = ''
 for document in df['content'][df['label']==1]:
