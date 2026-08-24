@@ -8,20 +8,36 @@ Cyberbullying is a significant issue in digital communication, involving the dis
 ## Running it
 ```bash
 pip install pandas numpy matplotlib seaborn pillow requests wordcloud nltk gensim scikit-learn pyLDAvis
+cd Semantic-Classification-of-Hostile-Social-Media-Comments
 python Semantic-Classification.py
 ```
-The dataset JSON is in this repository, so no download is needed. Two optional
-environment variables: `MODEL_DIR` (where `lda.model` is written and read, default
-`.`) and `WORDCLOUD_MASK_URL` (the word-cloud mask image; the plot renders unmasked
-if it cannot be fetched).
+The `cd` matters. The script reads `Dataset for Detection of Cyber-Trolls.json` by
+bare filename, so it resolves against the **working directory**, not against the
+script's own location — run it from anywhere else and it will not find its data.
+The file is in this repository, so nothing needs downloading. `MODEL_DIR` (default
+`.`, where `lda.model` is written and re-read) follows the same rule.
+
+Two things reach the network at run time: the four `nltk.download(...)` calls in the
+import block, and the word-cloud mask image. Only the mask is optional —
+`WORDCLOUD_MASK_URL` overrides it and the plot renders unmasked if the fetch fails.
 
 Written against gensim 3.x. The only hard incompatibility with gensim 4+ — an unused
-`gensim.models.wrappers` import, a module removed in 4.0 — has been dropped. The script
-has not been executed since, so treat other version sensitivities as untested.
+`gensim.models.wrappers` import, a module removed in 4.0 — has been dropped. Two other
+removed APIs survive in `plot_10_most_common_words`, which is never called:
+`CountVectorizer.get_feature_names()` (removed in scikit-learn 1.2) and positional
+`sns.barplot(x, y)` (removed in seaborn 0.12). Treat other version sensitivities as
+untested.
 
-The metrics quoted below come from a run that is not captured in this repository —
-`Semantic-Classification.py` is a script rather than a notebook, so no outputs are
-stored alongside the code. Re-running it will reproduce them.
+Expect it to take hours, not minutes: the topic-count search at line 177 fits 54 LDA
+models with `passes=10` over ~19,800 documents, each followed by a `c_v` coherence
+computation.
+
+Where the numbers below come from: `Semantic-Classification.py` is a flattened script
+rather than a notebook, so it stores no outputs. Every figure quoted here is the one
+recorded in `Semantic-Classification.pdf`, the report written from the original run.
+The script reproduces the same experiments, but SVM fits and the LDA sweep are not
+pinned tightly enough for the decimals to match — read them as the result to expect,
+not as a checksum.
 
 ## Credits
 The data loading, cleaning and lemmatisation pipeline is my own, written against this
@@ -60,7 +76,10 @@ The dataset showed some imbalance with a 3:2 ratio between non-hostile (label 0)
 Unsupervised learning was applied to divide the corpus into topics. Each message was represented by a feature vector of its topic composition. The coherence score suggested 31 topics as optimal.
 
 ### Support Vector Machine (SVM)
-SVM was used for classification. The feature vectors from LDA were split into an 80% training set and a 20% testing set. Various kernels were tested:
+SVM was used for classification. The 31-dimensional LDA topic vectors were split into an
+80% training set and a 20% testing set (`random_state=424`), and four kernels compared —
+the loop over `['linear', 'poly', 'rbf', 'sigmoid']` in `Semantic-Classification.py`
+prints this table:
 
 1. **Linear Kernel**: 
    - Training: Accuracy = 60.576%, Precision = 73.846%, Recall = 7.631%

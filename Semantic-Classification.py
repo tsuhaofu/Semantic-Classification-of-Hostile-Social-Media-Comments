@@ -196,7 +196,7 @@ pprint(lda_model.print_topics())
 doc_lda = lda_model[corpus]
 
  # Show graph
-plt.plot(list(range(27,31)), coherence_list2731)
+plt.plot(list(range(1,55)), coherence_list2731)
 plt.xlabel("Num Topics")
 plt.ylabel("Coherence Score")
 plt.legend(("Coherence Score"), loc='best')
@@ -244,12 +244,17 @@ plt.legend(("explained_variance_ratio"), loc='best')
 plt.title("Choosing the optimal model with sum of explained_variance_ratio")
 plt.show()
 
-pca = PCA(n_components=i)
+# 19 is where the cumulative explained variance ratio first exceeds 0.80.
+N_COMPONENTS = 19
+pca = PCA(n_components=N_COMPONENTS)
 pc= pca.fit_transform(topic_vectors)
 pca_list.append(sum(pca.explained_variance_ratio_))
-pc_df = pd.DataFrame(data = pc
+# Plot the first two components only. df had empty rows dropped without a
+# reset_index, so its index has gaps; align positionally or the concat below
+# attaches labels to the wrong points.
+pc_df = pd.DataFrame(data = pc[:, :2]
              , columns = ['principal component 1', 'principal component 2'])
-pc_df = pd.concat([pc_df, df[['label']]], axis = 1)
+pc_df = pd.concat([pc_df, df[['label']].reset_index(drop=True)], axis = 1)
  #Visualize 2D Projection
 fig = plt.figure(figsize = (8,8))
 ax = fig.add_subplot(1,1,1) 
@@ -268,7 +273,20 @@ ax.legend(targets)
 plt.show()
 ax.grid()
 
-#SVM
+#SVM: kernel comparison on the pre-PCA LDA topic vectors (dim=31)
+xt_train, xt_test, yt_train, yt_test = train_test_split(
+    topic_vectors, df['label'], test_size=0.2, random_state=424)
+for kernel in ['linear', 'poly', 'rbf', 'sigmoid']:
+    clf = svm.SVC(kernel=kernel).fit(xt_train, yt_train)
+    for split, xs, ys in (("Training", xt_train, yt_train),
+                          ("Testing ", xt_test, yt_test)):
+        pred = clf.predict(xs)
+        print(f"{kernel:<8} {split}  "
+              f"Accuracy = {metrics.accuracy_score(ys, pred):.3%}  "
+              f"Precision = {metrics.precision_score(ys, pred, zero_division=0):.3%}  "
+              f"Recall = {metrics.recall_score(ys, pred, zero_division=0):.3%}")
+
+#SVM: the chosen model, Gaussian kernel on the PCA-reduced vectors
  # Split dataset into training set and test set
 x_train, x_test, y_train, y_test = train_test_split(pc, df['label'], test_size=0.2,random_state=424) # 80% training and 20% test
 SVM = svm.SVC()
